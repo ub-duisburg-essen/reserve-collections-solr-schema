@@ -1,0 +1,40 @@
+<dataConfig>
+    <dataSource driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <document>
+        <entity name="copyright" query="SELECT
+  r.id resourceID,
+  regexp_replace(r.filepath, '\d+/\d+/', '') filename,
+  r.mimetype mimeType,
+  r.fulltexturl url,
+  r.copyrightreviewstatus reviewStatus,
+  rc.id collectionID,
+  rc.rcnumberid collectionNumber,
+  rc.title collectionTitle,
+  e.id entryID,
+  e.modified modified
+    FROM resource r
+      LEFT JOIN journal_article ja ON r.id = ja.resourceid
+      LEFT JOIN book_chapter bc ON r.id = bc.resourceid
+      LEFT JOIN file f ON r.id = f.resourceid
+      LEFT JOIN entry e ON ja.id = e.id OR bc.id = e.id OR f.id = e.id
+      LEFT JOIN reserve_collection rc ON e.reservecollectionid = rc.id
+    WHERE r.fulltexturl IS NULL
+      AND e.deleted IS NULL
+      AND r.filepath IS NOT NULL
+      AND r.filedeleted IS NULL">
+
+            <field column="resourceid" name="resourceID" />
+            <field column="filename" name="fileName" />
+            <field column="mimetype" name="mimeType" />
+            <field column="fulltexturl" name="url" />
+            <field column="reviewstatus" name="reviewStatus" />
+            <field column="collectionid" name="collectionID" />
+            <field column="collectionnumber" name="collectionNumber" />
+            <field column="collectionnumber" name="collectionNumberNumeric" />
+            <field column="collectiontitle" name="collectionTitle" />
+            <field column="entryid" name="entryID" />
+            <field column="entryid" name="entryIDNumeric" />
+            <field column="modified" name="modified" />
+        </entity>
+    </document>
+</dataConfig>

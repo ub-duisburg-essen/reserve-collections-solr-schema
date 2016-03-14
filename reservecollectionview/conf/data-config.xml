@@ -1,0 +1,42 @@
+<dataConfig>
+    <dataSource name="rc" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <dataSource name="miless" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/miless" user="miless" password="miless" />
+    <document>
+        <entity dataSource="rc" name="reserve_collection" query="
+SELECT
+  rc.id                collectionid,
+  rc.comment           collectionComment,
+  rc.rcnumberid        number,
+  rc.status            status,
+  rc.librarylocationid locationid,
+  rc.title             title,
+  rc.validto           validto,
+  rc.dissolveat        dissolveat,
+  l.name               locationname
+    FROM
+      reserve_collection rc
+      LEFT JOIN library_location l ON rc.librarylocationid = l.id">
+            <field column="collectionid" name="collectionID" />
+            <field column="collectionComment" name="collectionComment" />
+            <field column="number" name="collectionNumber" />
+            <field column="number" name="collectionNumberNumeric" />
+            <field column="title" name="title" />
+            <field column="locationid" name="locationID" />
+            <field column="locationname" name="location" />
+            <field column="status" name="status" />
+            <field column="validto" name="validTo" />
+            <field column="dissolveat" name="dissolveAt" />
+            <entity dataSource="rc" name="docents" query="
+              select p.userid docentid
+              from participation p
+              left join role r on p.roleid = r.id
+              WHERE p.enddate is null
+              and r.name = 'Dozent'
+              and p.reservecollectionid = ${reserve_collection.collectionid}">
+                <entity dataSource="miless" name="authors" query="select u.realname realname from users u where u.userid = ${docents.docentid}">
+                    <field column="realname" name="authors" />
+                </entity>
+            </entity>
+        </entity>
+    </document>
+</dataConfig>

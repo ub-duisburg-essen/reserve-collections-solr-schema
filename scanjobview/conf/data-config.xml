@@ -1,0 +1,58 @@
+<dataConfig>
+    <dataSource driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <document>
+        <entity name="scanjob" query="SELECT
+  sj.id           jobid,
+  sj.status       jobstatus,
+  sj.modified     modified,
+  sjl.name        reviser,
+  sjl.id          reviserid,
+  e.id            entryid,
+  e.modified      scannablemodified,
+  ja.signature    jsignature,
+  ja.journaltitle jtitle,
+  ja.pageStart    articlepagestart,
+  ja.pageEnd      articlepageend,
+  bc.signature    bsignature,
+  bc.booktitle    btitle,
+  bc.pageStart    chapterpagestart,
+  bc.pageEnd      chapterpageend,
+  rc.id           collectionid,
+  rc.rcnumberid   collectionnumber,
+  rcl.name        locationname,
+  rcl.id          locationid
+    FROM scan_job sj
+      LEFT JOIN scan_job_book_chapter sjbc on sj.id = sjbc.scanjobid
+      LEFT JOIN scan_job_journal_article sjja on sj.id = sjja.scanjobid
+      LEFT JOIN journal_article ja ON ja.id = sjja.journalarticleid
+      LEFT JOIN book_chapter bc ON bc.id = sjbc.bookchapterid
+      LEFT JOIN entry e ON ja.id = e.id or bc.id = e.id
+      LEFT JOIN reserve_collection rc ON rc.id = e.reservecollectionid
+      LEFT JOIN library_location rcl ON rc.librarylocationid = rcl.id
+      LEFT JOIN library_location sjl ON sj.locationid = sjl.id
+    WHERE e.deleted IS NULL">
+
+            <field column="jobid" name="jobID" />
+            <field column="collectionid" name="collectionID" />
+            <field column="collectionnumber" name="collectionNumber" />
+            <field column="collectionnumber" name="collectionNumberNumeric" />
+            <field column="entryid" name="entryID" />
+            <field column="entryid" name="entryIDNumeric" />
+            <field column="scannablemodified" name="scannableModified" />
+            <field column="modified" name="modified" />
+            <field column="bsignature" name="bookSignature" />
+            <field column="btitle" name="bookTitle" />
+            <field column="jsignature" name="journalSignature" />
+            <field column="jtitle" name="journalTitle" />
+            <field column="locationname" name="locationName" />
+            <field column="locationid" name="locationID" />
+            <field column="reviser" name="reviser" />
+            <field column="reviserid" name="reviserID" />
+            <field column="jobstatus" name="jobStatus" />
+            <field column="chapterpagestart" name="chapterPageStart"/>
+            <field column="chapterpageend" name="chapterPageEnd"/>
+            <field column="articlepagestart" name="articlePageStart"/>
+            <field column="articlepageend" name="articlePageEnd"/>
+        </entity>
+    </document>
+</dataConfig>

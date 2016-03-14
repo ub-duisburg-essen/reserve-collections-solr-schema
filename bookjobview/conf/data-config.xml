@@ -1,0 +1,34 @@
+<dataConfig>
+    <dataSource driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <document>
+        <entity name="bookjob" query="SELECT
+  bj.id jobid,
+  bj.status status,
+  e.id entryid,
+  e.modified modified,
+  b.signature signature,
+  b.title booktitle,
+  rc.id collectionid,
+  rc.rcnumberid number,
+  l.name locationname,
+  l.id locationid
+    FROM book_job bj
+      LEFT JOIN book b ON b.id = bj.id
+      LEFT JOIN entry e ON b.id = e.id
+      LEFT JOIN reserve_collection rc ON rc.id = e.reservecollectionid
+      LEFT JOIN library_location l on rc.librarylocationid = l.id
+    WHERE e.deleted IS NULL">
+            <field column="collectionid" name="collectionID" />
+            <field column="jobid" name="jobID" />
+            <field column="jobid" name="jobIDNumeric" />
+            <field column="number" name="collectionNumber" />
+            <field column="number" name="collectionNumberNumeric" />
+            <field column="modified" name="modified" />
+            <field column="signature" name="signature" />
+            <field column="booktitle" name="title" />
+            <field column="status" name="status" />
+            <field column="locationname" name="locationName" />
+            <field column="locationid" name="locationID" />
+        </entity>
+    </document>
+</dataConfig>
