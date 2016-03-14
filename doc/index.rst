@@ -8,13 +8,13 @@ This project aims to provide a multi core solr configuration to search for reser
 Installation
 ============
 
-First of all get your working copy of this repository.
+First of all get your working copy of this repository. This directory is used as the base directory to solr, where all data and configuration is kept.
 
 .. code-block:: shell
 
-    git clone https://github.com/unibib-duisburg-essen/reserve-collections-solr-schema.git solr-home
+    git clone https://github.com/unibib-duisburg-essen/reserve-collections-solr-schema.git ~/rc-solr-home
 
-*solr-home* is going to be our :code:`$SOLR_HOME` from here on.
+*rc-solr-home* is going to be our :code:`$SOLR_HOME` from here on.
 
 To make use of the configuration you have to have a Java runtime environment and a running copy of apache solr. Download `Java`_ and the latest version of `Solr <http://lucene.apache.org/solr/mirrors-solr-latest-redir.html>`_. Inside the solr ``bin`` dir you can find several binaries to just run solr or install it as system service (Windows and Linux). For development just start solr inside the console using:
 
