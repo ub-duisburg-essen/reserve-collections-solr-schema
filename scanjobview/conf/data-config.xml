@@ -1,23 +1,27 @@
 <dataConfig>
     <dataSource driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <dataSource name="miless" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/miless" user="miless" password="miless" />
     <document>
         <entity name="scanjob" query="SELECT
-  sj.id               jobid,
-  sj.status           jobstatus,
-  sj.modified         scanjobmodified,
-  sjl.name            reviser,
-  sjl.id              reviserid,
-  e.id                entryid,
-  scannable.stype     stype,
-  scannable.modified  scannablemodified,
-  scannable.signature signature,
-  scannable.title     title,
-  scannable.pageStart pagestart,
-  scannable.pageEnd   pageend,
-  rc.id               collectionid,
-  rc.rcnumberid       collectionnumber,
-  rcl.name            locationname,
-  rcl.id              locationid
+  sj.id                 jobid,
+  sj.status             jobstatus,
+  sj.modified           scanjobmodified,
+  sjl.name              reviser,
+  sjl.id                reviserid,
+  e.id                  entryid,
+  scannable.stype       stype,
+  scannable.modified    scannablemodified,
+  scannable.signature   signature,
+  scannable.worktitle   worktitle,
+  scannable.workauthors workauthors,
+  scannable.parttitle   parttitle,
+  scannable.partauthors partauthors,
+  scannable.pageStart   pagestart,
+  scannable.pageEnd     pageend,
+  rc.id                 collectionid,
+  rc.rcnumberid         collectionnumber,
+  rcl.name              locationname,
+  rcl.id                locationid
 FROM scan_job sj
   LEFT JOIN (SELECT
                sjbc.bookchapterid AS scannableid,
@@ -31,19 +35,25 @@ FROM scan_job sj
                ja.id            AS id,
                'JournalArticle' AS stype,
                ja.signature     AS signature,
-               ja.journaltitle  AS title,
+               ja.journaltitle  AS worktitle,
+               ''               AS workauthors,
+               ja.articletitle  AS parttitle,
+               ja.authors       AS partauthors,
                ja.pageStart     AS pagestart,
                ja.pageEnd       AS pageend,
                ja.modified      AS modified
              FROM journal_article ja
              UNION SELECT
-                     bc.id         AS id,
-                     'BookChapter' AS stype,
-                     bc.signature  AS signature,
-                     bc.booktitle  AS title,
-                     bc.pageStart  AS pagestart,
-                     bc.pageEnd    AS pageend,
-                     bc.modified   AS modified
+                     bc.id             AS id,
+                     'BookChapter'     AS stype,
+                     bc.signature      AS signature,
+                     bc.booktitle      AS worktitle,
+                     bc.bookauthors    AS workauthors,
+                     bc.chaptertitle   AS parttitle,
+                     bc.chapterauthors AS partauthors,
+                     bc.pageStart      AS pagestart,
+                     bc.pageEnd        AS pageend,
+                     bc.modified       AS modified
                    FROM book_chapter bc) AS scannable ON scannable_job.scannableid = scannable.id
   LEFT JOIN entry e ON scannable.id = e.id
   LEFT JOIN reserve_collection rc ON rc.id = e.reservecollectionid
@@ -59,7 +69,10 @@ WHERE e.deleted IS NULL">
             <field column="stype" name="scannableType" />
             <field column="scanjobmodified" name="jobModified" />
             <field column="signature" name="signature" />
-            <field column="title" name="title" />
+            <field column="worktitle" name="workTitle" />
+            <field column="workauthors" name="workAuthors" />
+            <field column="parttitle" name="partTitle" />
+            <field column="partauthors" name="partAuthors" />
             <field column="locationname" name="locationName" />
             <field column="locationid" name="locationID" />
             <field column="reviser" name="reviser" />
@@ -67,6 +80,18 @@ WHERE e.deleted IS NULL">
             <field column="jobstatus" name="jobStatus" />
             <field column="pagestart" name="pageStart"/>
             <field column="pageend" name="pageEnd"/>
+
+            <entity dataSource="rc" name="docents" query="
+              select p.userid docentid
+              from participation p
+              left join role r on p.roleid = r.id
+              WHERE p.enddate is null
+              and r.name = 'Dozent'
+              and p.reservecollectionid = ${scanjob.collectionid}">
+                <entity dataSource="miless" name="authors" query="select u.realname realname from users u where u.userid = ${docents.docentid}">
+                    <field column="realname" name="docents" />
+                </entity>
+            </entity>
         </entity>
     </document>
 </dataConfig>

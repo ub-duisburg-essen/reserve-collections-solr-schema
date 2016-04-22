@@ -13,7 +13,10 @@
     <field name="scannableModified" type="date" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="scannableType" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="signature" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
-    <field name="title" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="workTitle" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="workAuthors" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="partTitle" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="partAuthors" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="jobStatus" type="int" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="locationName" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="locationID" type="int" indexed="true" stored="true" required="false" multiValued="false" />
@@ -21,6 +24,7 @@
     <field name="reviserID" type="int" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="pageStart" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="pageEnd" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="docents" type="text_general" indexed="true" stored="true" required="false" multiValued="true" />
     <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
@@ -34,7 +38,10 @@
     <copyField source="collectionNumber" dest="text"/>
     <copyField source="entryID" dest="text"/>
     <copyField source="signature" dest="text"/>
-    <copyField source="title" dest="text"/>
+    <copyField source="workTitle" dest="text"/>
+    <copyField source="workAuthors" dest="text"/>
+    <copyField source="partTitle" dest="text"/>
+    <copyField source="partAuthors" dest="text"/>
     <copyField source="locationName" dest="text"/>
     <copyField source="reviser" dest="text"/>
 
