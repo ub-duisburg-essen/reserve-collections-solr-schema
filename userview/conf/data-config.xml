@@ -1,0 +1,29 @@
+<dataConfig>
+    <dataSource name="miless" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/miless" user="miless" password="miless" />
+    <document>
+        <entity dataSource="miless" name="user" query="
+SELECT
+  u.userid      userid,
+  u.username    username,
+  u.realm       realm,
+  u.realname    realname,
+  u.email       email,
+  u.hint        hint,
+  u.lastlogin   lastlogin,
+  c.internalid  originid,
+  trim(cl.text) origin
+FROM users u
+  LEFT JOIN mcrcategory c ON u.origin = c.categid
+  LEFT JOIN mcrcategorylabels cl ON c.internalid = cl.category">
+            <field column="userid" name="userID" />
+            <field column="username" name="username" />
+            <field column="realm" name="realm" />
+            <field column="realname" name="realname" />
+            <field column="email" name="email" />
+            <field column="hint" name="hint" />
+            <field column="lastlogin" name="lastLogin" />
+            <field column="originid" name="originID" />
+            <field column="origin" name="origin" />
+        </entity>
+    </document>
+</dataConfig>
