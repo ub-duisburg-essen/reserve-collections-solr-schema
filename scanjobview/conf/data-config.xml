@@ -1,27 +1,26 @@
 <dataConfig>
-    <dataSource driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
+    <dataSource name="rc" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/reserve_collections" user="rc" password="rc" />
     <dataSource name="miless" driver="org.postgresql.Driver" url="jdbc:postgresql://localhost:5432/miless" user="miless" password="miless" />
     <document>
-        <entity name="scanjob" query="SELECT
-  sj.id                 jobid,
-  sj.status             jobstatus,
-  sj.modified           scanjobmodified,
-  sjl.name              reviser,
-  sjl.id                reviserid,
-  e.id                  entryid,
-  scannable.stype       stype,
-  scannable.modified    scannablemodified,
-  scannable.signature   signature,
-  scannable.worktitle   worktitle,
-  scannable.workauthors workauthors,
-  scannable.parttitle   parttitle,
-  scannable.partauthors partauthors,
-  scannable.pageStart   pagestart,
-  scannable.pageEnd     pageend,
-  rc.id                 collectionid,
-  rc.rcnumberid         collectionnumber,
-  rcl.name              locationname,
-  rcl.id                locationid
+        <entity dataSource="rc" name="scanjob" query="SELECT
+  sj.id                     jobid,
+  sj.status                 jobstatus,
+  sj.modified               scanjobmodified,
+  coalesce(sj.reviserid, 0) reviserid,
+  e.id                      entryid,
+  scannable.stype           stype,
+  scannable.modified        scannablemodified,
+  scannable.signature       signature,
+  scannable.worktitle       worktitle,
+  scannable.workauthors     workauthors,
+  scannable.parttitle       parttitle,
+  scannable.partauthors     partauthors,
+  scannable.pageStart       pagestart,
+  scannable.pageEnd         pageend,
+  rc.id                     collectionid,
+  rc.rcnumberid             collectionnumber,
+  rcl.name                  locationname,
+  rcl.id                    locationid
 FROM scan_job sj
   LEFT JOIN (SELECT
                sjbc.bookchapterid AS scannableid,
@@ -58,7 +57,6 @@ FROM scan_job sj
   LEFT JOIN entry e ON scannable.id = e.id
   LEFT JOIN reserve_collection rc ON rc.id = e.reservecollectionid
   LEFT JOIN library_location rcl ON rc.librarylocationid = rcl.id
-  LEFT JOIN library_location sjl ON sj.locationid = sjl.id
 WHERE e.deleted IS NULL">
 
             <field column="jobid" name="jobID" />
@@ -75,7 +73,6 @@ WHERE e.deleted IS NULL">
             <field column="partauthors" name="partAuthors" />
             <field column="locationname" name="locationName" />
             <field column="locationid" name="locationID" />
-            <field column="reviser" name="reviser" />
             <field column="reviserid" name="reviserID" />
             <field column="jobstatus" name="jobStatus" />
             <field column="pagestart" name="pageStart"/>
@@ -91,6 +88,10 @@ WHERE e.deleted IS NULL">
                 <entity dataSource="miless" name="authors" query="select u.realname realname from users u where u.userid = ${docents.docentid}">
                     <field column="realname" name="docents" />
                 </entity>
+            </entity>
+            <entity dataSource="miless" name="reviser"
+                    query="SELECT u.realname realname FROM users u WHERE u.userid = ${scanjob.reviserid}">
+                <field column="realname" name="reviser"/>
             </entity>
         </entity>
     </document>
