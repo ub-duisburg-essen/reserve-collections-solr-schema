@@ -90,7 +90,7 @@ WHERE e.deleted IS NULL">
                 </entity>
             </entity>
             <entity dataSource="miless" name="reviser"
-                    query="SELECT u.realname realname FROM users u WHERE u.userid = ${scanjob.reviserid}">
+                    query="SELECT u.realname realname FROM users u WHERE ${scanjob.reviserid} &lt; 0 and u.userid = ${scanjob.reviserid}">
                 <field column="realname" name="reviser"/>
             </entity>
         </entity>
