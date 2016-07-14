@@ -9,6 +9,7 @@
   coalesce(sj.reviserid, 0) reviserid,
   e.id                      entryid,
   scannable.stype           stype,
+  e.created                 scannablecreated,
   scannable.modified        scannablemodified,
   scannable.signature       signature,
   scannable.worktitle       worktitle,
@@ -63,6 +64,7 @@ WHERE e.deleted IS NULL">
             <field column="collectionid" name="collectionID" />
             <field column="collectionnumber" name="collectionNumber" />
             <field column="entryid" name="entryID" />
+            <field column="scannablecreated" name="scannableCreated" />
             <field column="scannablemodified" name="scannableModified" />
             <field column="stype" name="scannableType" />
             <field column="scanjobmodified" name="jobModified" />

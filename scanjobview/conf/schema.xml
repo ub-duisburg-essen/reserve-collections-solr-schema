@@ -10,6 +10,7 @@
     <field name="collectionNumber" type="int" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="entryID" type="int" indexed="true" stored="true" required="true" multiValued="false" />
     <field name="jobModified" type="date" indexed="true" stored="true" required="false" multiValued="false" />
+    <field name="scannableCreated" type="date" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="scannableModified" type="date" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="scannableType" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="signature" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
