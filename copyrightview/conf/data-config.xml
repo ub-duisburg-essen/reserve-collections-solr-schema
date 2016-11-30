@@ -11,13 +11,17 @@
   rc.rcnumberid collectionNumber,
   rc.title collectionTitle,
   e.id entryID,
-  e.modified modified
+  e.modified modified,
+  rcl.name locationname,
+  rcl.id locationid
+  
     FROM resource r
       LEFT JOIN journal_article ja ON r.id = ja.resourceid
       LEFT JOIN book_chapter bc ON r.id = bc.resourceid
       LEFT JOIN file f ON r.id = f.resourceid
       LEFT JOIN entry e ON ja.id = e.id OR bc.id = e.id OR f.id = e.id
       LEFT JOIN reserve_collection rc ON e.reservecollectionid = rc.id
+      LEFT JOIN library_location rcl ON rc.librarylocationid = rcl.id
     WHERE r.fulltexturl IS NULL
       AND e.deleted IS NULL
       AND r.filepath IS NOT NULL
@@ -35,6 +39,8 @@
             <field column="entryid" name="entryID" />
             <field column="entryid" name="entryIDNumeric" />
             <field column="modified" name="modified" />
+            <field column="locationname" name="locationName" />
+            <field column="locationid" name="locationID" />
         </entity>
     </document>
 </dataConfig>
